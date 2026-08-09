@@ -37,16 +37,30 @@ import agent as interview_agent
 import report_store
 
 # ─── Startup: load data once ──────────────────────────────────────────────────
-curriculum = {}
-candidates = []
+try:
+    curriculum = load_curriculum()
+    candidates = load_candidates()
+    print(f"[startup] Pre-loaded {len(candidates)} candidates and {len(curriculum.get('days', []))} curriculum days.")
+except Exception as _e:
+    print(f"[startup error] Could not pre-load data: {_e}")
+    curriculum = {"days": [], "modules": []}
+    candidates = []
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     global curriculum, candidates
     load_dotenv(dotenv_path=_ENV_PATH, override=True)
-    curriculum = load_curriculum()
-    candidates = load_candidates()
-    print(f"[startup] Loaded {len(candidates)} candidates and {len(curriculum['days'])} curriculum days.")
+    if not curriculum.get("days"):
+        try:
+            curriculum = load_curriculum()
+        except Exception:
+            pass
+    if not candidates:
+        try:
+            candidates = load_candidates()
+        except Exception:
+            pass
+    print(f"[lifespan] Loaded {len(candidates)} candidates.")
 
     api_key = os.getenv("GROQ_API_KEY", "")
     if not api_key or api_key == "your_groq_api_key_here":
