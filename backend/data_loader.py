@@ -6,14 +6,24 @@ import json
 import os
 from pathlib import Path
 
-_BASE = Path(__file__).parent.parent  # project-02/
+def _find_file(filename: str) -> Path:
+    candidates_paths = [
+        Path(__file__).resolve().parent.parent / filename,
+        Path(__file__).resolve().parent / filename,
+        Path.cwd() / filename,
+        Path.cwd() / "backend" / filename,
+    ]
+    for p in candidates_paths:
+        if p.exists():
+            return p
+    raise FileNotFoundError(f"Could not find {filename}")
 
 def load_curriculum() -> dict:
-    with open(_BASE / "curriculum.json", "r", encoding="utf-8") as f:
+    with open(_find_file("curriculum.json"), "r", encoding="utf-8") as f:
         return json.load(f)
 
 def load_candidates() -> list[dict]:
-    with open(_BASE / "candidates.json", "r", encoding="utf-8") as f:
+    with open(_find_file("candidates.json"), "r", encoding="utf-8") as f:
         data = json.load(f)
     return data["candidates"]
 

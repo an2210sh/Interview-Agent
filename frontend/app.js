@@ -225,11 +225,12 @@ async function init() {
       );
     }
   } catch (err) {
+    const isLocal = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
     showSetupBanner(
-      "⚠️ Backend Not Running",
-      `Cannot connect to <strong>http://localhost:8000</strong><br/>
-       Run <code>start.bat</code> or:<br/>
-       <code>cd backend</code> → <code>python -m uvicorn main:app --port 8000 --reload</code>`,
+      "⚠️ Backend Service Unavailable",
+      isLocal
+        ? `Cannot connect to <strong>http://localhost:8000</strong><br/>Run <code>start.bat</code> or: <code>cd backend</code> → <code>python -m uvicorn main:app --port 8000 --reload</code>`
+        : `Backend API request failed (${err.message}). Make sure environment variable <code>GROQ_API_KEY</code> is set in Vercel Settings.`,
       "error"
     );
     $candidateList.innerHTML = `<div class="sidebar-error">Backend offline</div>`;

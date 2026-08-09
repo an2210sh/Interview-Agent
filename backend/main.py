@@ -9,6 +9,17 @@ Endpoints:
 """
 
 import os
+import sys
+from pathlib import Path
+
+# Ensure backend directory and project root are in sys.path
+_HERE = Path(__file__).resolve().parent
+_ROOT = _HERE.parent
+if str(_HERE) not in sys.path:
+    sys.path.insert(0, str(_HERE))
+if str(_ROOT) not in sys.path:
+    sys.path.insert(0, str(_ROOT))
+
 from contextlib import asynccontextmanager
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
