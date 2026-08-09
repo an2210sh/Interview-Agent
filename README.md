@@ -1,7 +1,7 @@
 # AI Interview Agent Platform
 
 > A personalized AI-powered technical interview platform for the **31-Day AI Cohort** program.
-
+The project is liv at https://interview-agent-gw2anv9x4-amazon-clone-0062.vercel.app/
 ---
 
 ## Features
