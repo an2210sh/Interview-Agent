@@ -17,7 +17,13 @@ _PROMPT_MD   = os.path.join(_REPORTS_DIR, "prompt.md")
 
 
 def _ensure_dir():
-    os.makedirs(_REPORTS_DIR, exist_ok=True)
+    global _REPORTS_DIR, _PROMPT_MD
+    try:
+        os.makedirs(_REPORTS_DIR, exist_ok=True)
+    except OSError:
+        _REPORTS_DIR = "/tmp/reports"
+        _PROMPT_MD = os.path.join(_REPORTS_DIR, "prompt.md")
+        os.makedirs(_REPORTS_DIR, exist_ok=True)
 
 
 def save_report(session, feedback: dict) -> str:
