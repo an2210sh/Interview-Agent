@@ -164,8 +164,8 @@ def start_interview(session: InterviewSession) -> str:
 
     opening_instruction = (
         f"The interview is starting. Greet {member['name']} warmly, "
-        f"briefly mention you've reviewed their cohort profile, "
-        f"and ask your first technical question about one of their completed missions."
+        f"explicitly mention that you will be conducting a thorough 10-question technical assessment covering their AI Cohort missions, "
+        f"and ask your FIRST technical question (#1 of 10) about one of their completed missions."
     )
 
     messages = [
@@ -199,14 +199,23 @@ def get_next_response(session: InterviewSession, user_message: str) -> tuple[str
 
     groq_messages = session.messages.copy()
 
-    if session.question_count >= 10 and len(session.days_covered) >= 4:
+    if session.question_count < 10:
         groq_messages.append({
             "role": "user",
             "content": (
-                "[Internal note - not visible to candidate]: "
-                f"You have asked {session.question_count} questions covering {len(session.days_covered)} topics. "
-                "You have met the minimum requirement of 10 questions. You may now wrap up the interview with [INTERVIEW_COMPLETE] and the JSON feedback block. "
-                "Remember: base the score ONLY on actual answers given. If many answers were blank or irrelevant, score accordingly."
+                f"[SYSTEM DIRECTIVE - Turn {session.question_count} of 10]: "
+                f"You have asked {session.question_count} questions so far. You MUST ask AT LEAST 10 questions before finishing. "
+                f"Do NOT wrap up, do NOT say 'that concludes our interview' or give final thoughts yet. "
+                f"Briefly evaluate the candidate's last answer, then ask Question #{session.question_count + 1} about another completed mission or technical topic."
+            )
+        })
+    else:
+        groq_messages.append({
+            "role": "user",
+            "content": (
+                f"[SYSTEM DIRECTIVE - Turn {session.question_count} of 10]: "
+                f"You have asked {session.question_count} questions and satisfied the 10-question minimum. "
+                f"You may now wrap up the interview gracefully, include [INTERVIEW_COMPLETE], and output the JSON feedback block."
             )
         })
 
@@ -233,8 +242,12 @@ def get_next_response(session: InterviewSession, user_message: str) -> tuple[str
         else:
             # Strip premature completion tag if model attempted to end early
             reply = reply.replace("[INTERVIEW_COMPLETE]", "").strip()
+            if "concludes" in reply.lower() or "wraps up" in reply.lower():
+                reply += f"\n\nLet me ask you question #{session.question_count + 1} of 10 to explore further..."
             session.messages.append({"role": "assistant", "content": reply})
     else:
+        if session.question_count < 10 and ("concludes" in reply.lower() or "wraps up" in reply.lower()):
+            reply += f"\n\nLet's move on to Question #{session.question_count + 1} of 10..."
         session.messages.append({"role": "assistant", "content": reply})
 
     return reply, is_done, feedback

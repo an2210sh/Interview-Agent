@@ -943,7 +943,7 @@ function setInput(enabled) {
 }
 
 function updateStats() {
-  $statQVal.textContent = state.questionCount;
+  $statQVal.textContent = `${state.questionCount}/10`;
   $statTVal.textContent = state.topicsCount;
 }
 
