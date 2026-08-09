@@ -750,6 +750,14 @@ function renderReportBody($body, data) {
     </div>`;
 }
 
+function exportReportPDF() {
+  window.print();
+}
+
+function exportModalReportPDF() {
+  window.print();
+}
+
 function closeReportViewer() {
   switchTab("reports");
   showView("dashboard");

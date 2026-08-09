@@ -2374,3 +2374,112 @@ html, body {
     width: 100%;
   }
 }
+
+/* ── Export PDF Button Styles ────────────────────────────── */
+.rv-export-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  background: var(--amber-dim);
+  border: 1px solid var(--amber);
+  color: var(--amber-light);
+  font-family: var(--font-sans);
+  font-size: 12.5px;
+  font-weight: 600;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  margin-left: auto;
+  transition: all 0.18s;
+}
+
+.rv-export-btn:hover {
+  background: var(--amber);
+  color: white;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px var(--amber-glow);
+}
+
+/* ── Print / PDF Export Stylesheet ───────────────────────── */
+@media print {
+  body {
+    background: white !important;
+    color: black !important;
+  }
+
+  .sidebar,
+  .rv-back,
+  .rv-export-btn,
+  .rv-delete-btn,
+  #theme-toggle,
+  .modal-actions,
+  .landing-cta-row {
+    display: none !important;
+  }
+
+  .app-shell {
+    display: block !important;
+    height: auto !important;
+  }
+
+  .main-content {
+    overflow: visible !important;
+    display: block !important;
+  }
+
+  .report-viewer {
+    display: block !important;
+    background: white !important;
+    color: black !important;
+    padding: 0 !important;
+  }
+
+  .rv-header {
+    border-bottom: 2px solid #222 !important;
+    padding-bottom: 12px !important;
+  }
+
+  .rv-title {
+    color: black !important;
+    font-size: 24px !important;
+  }
+
+  .rv-score-banner {
+    background: #f4f5f7 !important;
+    border: 1px solid #ddd !important;
+    color: black !important;
+    page-break-inside: avoid;
+  }
+
+  .rv-score-num {
+    color: #222 !important;
+  }
+
+  .rv-cname {
+    color: #000 !important;
+  }
+
+  .rv-section {
+    border: 1px solid #e0e0e0 !important;
+    page-break-inside: avoid;
+    margin-bottom: 16px !important;
+  }
+
+  .rv-section-header {
+    background: #f0f0f0 !important;
+    color: #111 !important;
+    border-bottom: 1px solid #ddd !important;
+  }
+
+  .rv-msg-assistant {
+    background: #f8f9fa !important;
+    border: 1px solid #e0e0e0 !important;
+    color: #222 !important;
+  }
+
+  .rv-msg-user {
+    background: #eef4ff !important;
+    border: 1px solid #cce0ff !important;
+    color: #111 !important;
+  }
+}

@@ -359,6 +359,10 @@
           Back to Reports
         </button>
         <h2 class="rv-title" id="rv-title">Interview Report</h2>
+        <button class="rv-export-btn" id="rv-export-btn" title="Export / Print PDF" onclick="exportReportPDF()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Export PDF
+        </button>
         <button class="rv-delete-btn" id="rv-delete-btn" title="Delete Report">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
           Delete Report
@@ -413,6 +417,7 @@
     </div>
 
     <div class="modal-actions">
+      <button class="btn-ghost" id="btn-export-modal" onclick="exportModalReportPDF()">📄 Export PDF</button>
       <button class="btn-ghost" id="btn-close-modal">Close</button>
       <button class="btn-amber" id="btn-new-interview">New Interview</button>
     </div>
