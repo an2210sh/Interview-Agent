@@ -152,3 +152,19 @@ def get_report(filename: str) -> dict | None:
         return None
     with open(fpath, "r", encoding="utf-8") as f:
         return json.load(f)
+
+
+def delete_report(filename: str) -> bool:
+    """Safely delete an individual candidate interview report."""
+    _ensure_dir()
+    safe_name = os.path.basename(filename)
+    if not safe_name.endswith(".json"):
+        return False
+    fpath = os.path.join(_REPORTS_DIR, safe_name)
+    if os.path.exists(fpath):
+        try:
+            os.remove(fpath)
+            return True
+        except OSError:
+            return False
+    return False

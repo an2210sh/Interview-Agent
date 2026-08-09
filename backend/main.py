@@ -261,6 +261,15 @@ async def get_report(filename: str):
     return data
 
 
+@app.delete("/api/reports/{filename}")
+async def delete_report(filename: str):
+    """Delete a specific interview report by filename."""
+    success = report_store.delete_report(filename)
+    if not success:
+        raise HTTPException(status_code=404, detail="Report not found or could not be deleted.")
+    return {"status": "ok", "message": f"Report {filename} deleted successfully."}
+
+
 @app.get("/health")
 async def health():
     api_key = os.getenv("GROQ_API_KEY", "")

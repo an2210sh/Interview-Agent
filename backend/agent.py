@@ -112,8 +112,9 @@ def build_system_prompt(candidate_context: dict) -> str:
 4. **Cover at least 4 different curriculum days/topics** across the interview.
    Focus mostly on completed work but briefly touch skipped/failed areas.
 
-5. **Track internally** which days you've asked about. After 8+ questions covering 4+ days,
-   wrap up naturally and say you're ready to provide feedback.
+5. **CRITICAL QUESTION COUNT REQUIREMENT (MINIMUM 10 QUESTIONS):**
+   - You MUST ask AT LEAST 10 distinct technical questions before concluding the session.
+   - Do NOT wrap up, summarize, or produce [INTERVIEW_COMPLETE] until you have asked at least 10 full technical questions and received candidate responses for all of them.
 
 6. **CRITICAL — Answer Verification & Scoring Rules:**
    - You MUST evaluate each candidate answer carefully and honestly.
@@ -198,13 +199,13 @@ def get_next_response(session: InterviewSession, user_message: str) -> tuple[str
 
     groq_messages = session.messages.copy()
 
-    if session.question_count >= 7 and len(session.days_covered) >= 4:
+    if session.question_count >= 10 and len(session.days_covered) >= 4:
         groq_messages.append({
             "role": "user",
             "content": (
                 "[Internal note - not visible to candidate]: "
-                f"You've asked {session.question_count} questions covering {len(session.days_covered)} topics. "
-                "Ask 1 more wrapping question then end the interview with [INTERVIEW_COMPLETE] and the JSON feedback. "
+                f"You have asked {session.question_count} questions covering {len(session.days_covered)} topics. "
+                "You have met the minimum requirement of 10 questions. You may now wrap up the interview with [INTERVIEW_COMPLETE] and the JSON feedback block. "
                 "Remember: base the score ONLY on actual answers given. If many answers were blank or irrelevant, score accordingly."
             )
         })
@@ -221,12 +222,18 @@ def get_next_response(session: InterviewSession, user_message: str) -> tuple[str
     is_done = False
     feedback = None
 
+    # Strictly enforce minimum 10 questions before accepting [INTERVIEW_COMPLETE]
     if "[INTERVIEW_COMPLETE]" in reply:
-        is_done = True
-        reply_clean, feedback = _extract_feedback(reply)
-        reply = reply_clean
-        session.is_complete = True
-        session.feedback = feedback
+        if session.question_count >= 10:
+            is_done = True
+            reply_clean, feedback = _extract_feedback(reply)
+            reply = reply_clean
+            session.is_complete = True
+            session.feedback = feedback
+        else:
+            # Strip premature completion tag if model attempted to end early
+            reply = reply.replace("[INTERVIEW_COMPLETE]", "").strip()
+            session.messages.append({"role": "assistant", "content": reply})
     else:
         session.messages.append({"role": "assistant", "content": reply})
 

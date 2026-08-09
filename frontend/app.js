@@ -31,9 +31,9 @@ const state = {
 };
 
 // ── DOM Refs ──────────────────────────────────────────────────────────────────
+const $landingPage       = document.getElementById("landing-page");
 const $dashboard         = document.getElementById("dashboard");
 const $candidateDirectory= document.getElementById("candidate-directory");
-const $interviewPanel    = document.getElementById("interview-panel");
 const $reportViewer      = document.getElementById("report-viewer");
 const $chatArea          = document.getElementById("chat-area");
 const $messageInput      = document.getElementById("message-input");
@@ -163,6 +163,7 @@ document.getElementById("theme-toggle").addEventListener("click", () => {
 // ── View Switching ────────────────────────────────────────────────────────────
 
 function showView(view) {
+  if ($landingPage) $landingPage.style.display = view === "landing" ? "flex" : "none";
   $dashboard.style.display          = view === "dashboard"  ? "flex" : "none";
   $candidateDirectory.style.display = view === "directory"  ? "flex" : "none";
   $interviewPanel.style.display     = view === "interview"  ? "flex" : "none";
@@ -178,11 +179,12 @@ function goHome() {
   state.candidate = null;
   state.sessionId = null;
   document.querySelectorAll(".candidate-card").forEach(el => el.classList.remove("active"));
-  showView("dashboard");
+  switchTab("home");
   refreshDashboardStats();
 }
 
 function openCandidateDirectory() {
+  switchTab("candidates");
   showView("directory");
   renderCandidateDirectory();
 }
@@ -191,16 +193,28 @@ function openCandidateDirectory() {
 
 function switchTab(tab) {
   state.currentTab = tab;
+  const $tabHome = document.getElementById("tab-home");
+  if ($tabHome) $tabHome.classList.toggle("active", tab === "home");
   document.getElementById("tab-candidates").classList.toggle("active", tab === "candidates");
   document.getElementById("tab-reports").classList.toggle("active",    tab === "reports");
-  document.getElementById("panel-candidates").classList.toggle("hidden", tab !== "candidates");
-  document.getElementById("panel-reports").classList.toggle("hidden",    tab !== "reports");
-  if (tab === "reports") loadReports();
-  if (tab === "candidates") {
-    $candidateList.scrollTop = 0;
-    const panel = document.getElementById("panel-candidates");
-    panel.classList.add("flash-highlight");
-    setTimeout(() => panel.classList.remove("flash-highlight"), 600);
+
+  if (tab === "home") {
+    showView("landing");
+    document.getElementById("panel-candidates").classList.remove("hidden");
+    document.getElementById("panel-reports").classList.add("hidden");
+  } else if (tab === "candidates") {
+    document.getElementById("panel-candidates").classList.remove("hidden");
+    document.getElementById("panel-reports").classList.add("hidden");
+    if ($interviewPanel.style.display === "none" && $reportViewer.style.display === "none") {
+      showView("dashboard");
+    }
+  } else if (tab === "reports") {
+    document.getElementById("panel-candidates").classList.add("hidden");
+    document.getElementById("panel-reports").classList.remove("hidden");
+    loadReports();
+    if ($interviewPanel.style.display === "none" && $reportViewer.style.display === "none") {
+      showView("dashboard");
+    }
   }
 }
 
@@ -208,7 +222,7 @@ function switchTab(tab) {
 
 async function init() {
   initTheme();
-  showView("dashboard");
+  showView("landing");
 
   try {
     const res = await fetch(`${API_BASE}/api/status`, { signal: AbortSignal.timeout(4000) });
@@ -647,6 +661,7 @@ function renderReportList(reports) {
       <div class="report-meta-row">
         <span class="report-time">⏱ ${timeStr}</span>
         <span class="report-date">${fmtDate(r.completed_at)}</span>
+        <button class="report-delete-btn" title="Delete Report" onclick="event.stopPropagation(); deleteReport('${esc(r.filename)}')">🗑️</button>
       </div>`;
     card.addEventListener("click", () => openReport(r.filename, r));
     $reportList.appendChild(card);
@@ -656,6 +671,11 @@ function renderReportList(reports) {
 async function openReport(filename, meta) {
   showView("report");
   document.getElementById("rv-title").textContent = `${meta.candidate_name}`;
+
+  const deleteBtn = document.getElementById("rv-delete-btn");
+  if (deleteBtn) {
+    deleteBtn.onclick = () => deleteReport(filename);
+  }
 
   const $body = document.getElementById("rv-body");
   $body.innerHTML = `<div style="color:var(--text-muted);font-size:13px;padding:8px 0;">Loading…</div>`;
@@ -731,7 +751,25 @@ function renderReportBody($body, data) {
 }
 
 function closeReportViewer() {
+  switchTab("reports");
   showView("dashboard");
+}
+
+async function deleteReport(filename) {
+  if (!confirm("Are you sure you want to delete this interview report? This action cannot be undone.")) {
+    return;
+  }
+  try {
+    const res = await fetch(`${API_BASE}/api/reports/${encodeURIComponent(filename)}`, {
+      method: "DELETE"
+    });
+    if (!res.ok) throw new Error("Failed to delete report.");
+    closeReportViewer();
+    await loadReports();
+    await loadCandidates();
+  } catch (err) {
+    alert(`Could not delete report: ${err.message}`);
+  }
 }
 
 // ── Interview Flow ────────────────────────────────────────────────────────────
