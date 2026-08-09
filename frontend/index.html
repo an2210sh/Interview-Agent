@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>InterviewAI — AI Cohort Technical Interviews</title>
+  <meta name="description" content="Personalized AI-powered technical interview hub for AI Cohort graduates. Adaptive questions, scores out of 100, saved reports and full transcripts." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<div class="app-shell">
+
+  <!-- ── SIDEBAR ─────────────────────────────────────────────────── -->
+  <aside class="sidebar">
+
+    <!-- Logo + Theme Toggle -->
+    <div class="sidebar-header">
+      <div class="logo-lockup">
+        <div class="logo-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+            <circle cx="12" cy="12" r="10" fill="var(--amber)"/>
+            <path d="M9 12l2 2 4-4" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <div>
+          <div class="logo-name">InterviewAI</div>
+          <div class="logo-tagline">AI Cohort · 31 Days</div>
+        </div>
+      </div>
+      <button class="theme-toggle" id="theme-toggle" title="Toggle dark/light mode">
+        <span class="theme-icon-light">☀️</span>
+        <span class="theme-icon-dark">🌙</span>
+      </button>
+    </div>
+
+    <!-- New Interview Button -->
+    <div class="sidebar-action">
+      <button class="new-interview-btn" id="new-interview-btn" onclick="goHome()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        New Interview
+      </button>
+    </div>
+
+    <!-- Nav Tabs -->
+    <div class="sidebar-nav">
+      <button class="nav-tab active" id="tab-candidates" onclick="switchTab('candidates')">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        Candidates
+      </button>
+      <button class="nav-tab" id="tab-reports" onclick="switchTab('reports')">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+        Reports
+      </button>
+    </div>
+
+    <!-- Candidates Panel -->
+    <div class="sidebar-panel" id="panel-candidates">
+      <div class="sidebar-search">
+        <svg class="search-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        <input type="text" id="search-input" placeholder="Search by name or role…" autocomplete="off" />
+      </div>
+      <div class="section-label">TOP CANDIDATES</div>
+      <div class="candidate-list" id="candidate-list">
+        <div class="candidate-skeleton"></div>
+        <div class="candidate-skeleton"></div>
+        <div class="candidate-skeleton"></div>
+        <div class="candidate-skeleton"></div>
+      </div>
+    </div>
+
+    <!-- Reports Panel -->
+    <div class="sidebar-panel hidden" id="panel-reports">
+      <div class="section-label">LEADERBOARD COMPARISON</div>
+      <div id="comparison-bars" class="comparison-bars">
+        <div class="reports-empty-sm">No reports yet</div>
+      </div>
+      <div class="section-label" style="margin-top:8px;">COMPLETED INTERVIEWS</div>
+      <div class="report-list" id="report-list">
+        <div class="reports-empty">Complete an interview to see reports here.</div>
+      </div>
+    </div>
+
+  </aside>
+
+  <!-- ── MAIN CONTENT ───────────────────────────────────────────── -->
+  <main class="main-content" id="main-content">
+
+    <!-- ── DASHBOARD (home screen) ─── -->
+    <section class="dashboard" id="dashboard">
+      <div class="dash-scroll">
+
+        <!-- Setup banner placeholder -->
+        <div id="dash-setup-banner"></div>
+
+        <!-- Hero -->
+        <div class="dash-hero">
+          <div class="dash-robot">
+            <svg width="64" height="64" viewBox="0 0 64 64" fill="none">
+              <rect x="16" y="20" width="32" height="28" rx="8" fill="var(--amber)" opacity="0.9"/>
+              <circle cx="24" cy="32" r="4" fill="white"/>
+              <circle cx="40" cy="32" r="4" fill="white"/>
+              <circle cx="24" cy="32" r="2" fill="var(--amber)"/>
+              <circle cx="40" cy="32" r="2" fill="var(--amber)"/>
+              <rect x="28" y="38" width="8" height="3" rx="1.5" fill="white" opacity="0.7"/>
+              <rect x="30" y="12" width="4" height="10" rx="2" fill="var(--amber)" opacity="0.7"/>
+              <circle cx="32" cy="10" r="3" fill="var(--amber)"/>
+              <rect x="8" y="28" width="8" height="3" rx="1.5" fill="var(--amber)" opacity="0.5"/>
+              <rect x="48" y="28" width="8" height="3" rx="1.5" fill="var(--amber)" opacity="0.5"/>
+            </svg>
+          </div>
+          <div class="dash-hero-text">
+            <h1 class="dash-title">Your AI Interview Hub</h1>
+            <p class="dash-subtitle">
+              AI Cohort · 31 Days&nbsp;&nbsp;<span class="active-badge">ACTIVE</span>
+            </p>
+          </div>
+        </div>
+
+        <!-- Stats Row (Total, Active, Avg Score, Avg Time) -->
+        <div class="dash-stats">
+          <!-- Total Candidates -->
+          <div class="stat-card number-stat-card">
+            <div class="stat-card-label">Total Candidates</div>
+            <div class="stat-big-number" id="stat-total">—</div>
+          </div>
+          <!-- Active Interviews -->
+          <div class="stat-card number-stat-card">
+            <div class="stat-card-label">Active Interviews</div>
+            <div class="stat-big-number" id="stat-active">0</div>
+          </div>
+          <!-- Avg Score -->
+          <div class="stat-card number-stat-card">
+            <div class="stat-card-label">Avg Score</div>
+            <div class="stat-big-number" id="stat-avg-score">—</div>
+            <div class="stat-sub-label" id="stat-avg-score-sub"></div>
+          </div>
+          <!-- Avg Time -->
+          <div class="stat-card number-stat-card">
+            <div class="stat-card-label">Avg Duration</div>
+            <div class="stat-big-number stat-time-number" id="stat-avg-time">—</div>
+            <div class="stat-sub-label" id="stat-avg-time-sub"></div>
+          </div>
+        </div>
+
+        <!-- Time Taken vs Marks Graph -->
+        <div class="dash-section">
+          <div class="stat-card scatter-chart-card">
+            <div class="scatter-chart-header">
+              <div class="stat-card-label">Performance Overview — Time Taken vs Marks</div>
+              <div class="scatter-legend">
+                <span class="legend-dot legend-excellent"></span> ≥90
+                <span class="legend-dot legend-good"></span> ≥75
+                <span class="legend-dot legend-avg"></span> ≥60
+                <span class="legend-dot legend-poor"></span> &lt;60
+              </div>
+            </div>
+            <div class="scatter-chart-wrap">
+              <svg id="scatter-chart" class="scatter-chart"></svg>
+              <div id="scatter-empty" class="scatter-empty">Complete interviews to view candidate performance data</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Priority Candidates -->
+        <div class="dash-section">
+          <div class="dash-section-header">
+            <h2 class="dash-section-title">High-Priority Candidates</h2>
+            <button class="view-all-btn" id="dash-view-all-btn" onclick="openCandidateDirectory()">View All →</button>
+          </div>
+          <div class="priority-grid" id="priority-grid">
+            <!-- Populated by JS -->
+            <div class="candidate-skeleton" style="height:160px;border-radius:14px;"></div>
+            <div class="candidate-skeleton" style="height:160px;border-radius:14px;"></div>
+          </div>
+        </div>
+
+        <!-- Core Capabilities -->
+        <div class="dash-section">
+          <div class="dash-section-header">
+            <h2 class="dash-section-title">Core Capabilities</h2>
+          </div>
+          <div class="capabilities-grid">
+            <div class="cap-card">
+              <div class="cap-icon cap-icon-purple">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07M8.46 8.46a5 5 0 0 0 0 7.07"/></svg>
+              </div>
+              <div class="cap-label">Adaptive Questions</div>
+              <div class="cap-desc">Personalized per candidate's learning journey</div>
+            </div>
+            <div class="cap-card">
+              <div class="cap-icon cap-icon-amber">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
+              </div>
+              <div class="cap-label">Score out of 100</div>
+              <div class="cap-desc">Strict scoring based on actual answers given</div>
+            </div>
+            <div class="cap-card">
+              <div class="cap-icon cap-icon-green">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+              </div>
+              <div class="cap-label">Saved Reports</div>
+              <div class="cap-desc">Every interview persisted with full feedback</div>
+            </div>
+            <div class="cap-card">
+              <div class="cap-icon cap-icon-blue">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+              </div>
+              <div class="cap-label">Full Transcripts</div>
+              <div class="cap-desc">Complete Q&A log saved to prompt.md</div>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /dash-scroll -->
+    </section>
+
+    <!-- ── CANDIDATE DIRECTORY VIEW ─── -->
+    <section class="candidate-directory" id="candidate-directory" style="display:none;">
+      <div class="cd-scroll">
+        <div class="cd-header">
+          <div>
+            <h2 class="cd-title">All Candidates</h2>
+            <p class="cd-sub">Browse, inspect status, and start or retake technical interviews.</p>
+          </div>
+          <div class="cd-controls">
+            <div class="cd-search-wrap">
+              <svg class="search-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+              <input type="text" id="cd-search" class="cd-search-input" placeholder="Filter candidate grid…" />
+            </div>
+            <div class="cd-filter-tabs">
+              <button class="cd-filter-btn active" data-filter="all" onclick="filterDirectory('all')">All</button>
+              <button class="cd-filter-btn" data-filter="interviewed" onclick="filterDirectory('interviewed')">Interviewed</button>
+              <button class="cd-filter-btn" data-filter="pending" onclick="filterDirectory('pending')">Pending</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="cd-grid" id="cd-grid">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ── INTERVIEW PANEL ─── -->
+    <section class="interview-panel" id="interview-panel" style="display:none;">
+      <header class="interview-header">
+        <div class="header-left">
+          <button class="back-btn" onclick="goHome()" title="Back to dashboard">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15,18 9,12 15,6"/></svg>
+          </button>
+          <div class="candidate-avatar-lg" id="header-avatar">SJ</div>
+          <div class="header-info">
+            <div class="header-name" id="header-name">Sarah Johnson</div>
+            <div class="header-role" id="header-role">Senior Data Engineer · 9 yrs</div>
+          </div>
+        </div>
+        <div class="header-right">
+          <div class="stat-chip timer-chip" id="timer-chip">
+            <span class="timer-dot"></span>
+            <span id="timer-display" class="timer-display">00:00</span>
+          </div>
+          <div class="stat-chip">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+            <span id="stat-q-val">0</span> Q&amp;A
+          </div>
+          <div class="stat-chip">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+            <span id="stat-t-val">0</span> topics
+          </div>
+          <div class="status-badge" id="status-badge">
+            <span class="status-dot"></span>
+            In Progress
+          </div>
+        </div>
+      </header>
+
+      <div class="chat-area" id="chat-area"></div>
+
+      <div class="typing-row" id="typing-indicator" style="display:none;">
+        <div class="typing-avatar">AI</div>
+        <div class="typing-bubble"><span></span><span></span><span></span></div>
+      </div>
+
+      <div class="input-area" id="input-area">
+        <div class="input-wrapper">
+          <textarea id="message-input" placeholder="Share your answer here…" rows="1" maxlength="2000"></textarea>
+          <button class="send-btn" id="send-btn" disabled title="Send (Ctrl+Enter)">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+          </button>
+        </div>
+        <div class="input-hint">
+          Press <kbd>Ctrl+Enter</kbd> to send ·
+          <span id="char-count">0</span>/2000
+        </div>
+      </div>
+    </section>
+
+    <!-- ── REPORT VIEWER ─── -->
+    <section class="report-viewer" id="report-viewer" style="display:none;">
+      <div class="rv-header">
+        <button class="rv-back" onclick="closeReportViewer()">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15,18 9,12 15,6"/></svg>
+          Back to Reports
+        </button>
+        <h2 class="rv-title" id="rv-title">Interview Report</h2>
+      </div>
+      <div class="rv-body" id="rv-body"></div>
+    </section>
+
+  </main><!-- /main-content -->
+</div><!-- /app-shell -->
+
+<!-- ── FEEDBACK MODAL ─────────────────────────────────────── -->
+<div class="modal-overlay" id="modal-overlay" style="display:none;">
+  <div class="modal-card">
+    <div class="modal-score-section">
+      <div class="score-ring-wrap">
+        <svg class="score-ring" viewBox="0 0 120 120" width="120" height="120">
+          <circle class="ring-bg"   cx="60" cy="60" r="52"/>
+          <circle class="ring-fill" id="score-ring-fill" cx="60" cy="60" r="52"
+            stroke-dasharray="326.7" stroke-dashoffset="326.7"/>
+        </svg>
+        <div class="score-center">
+          <div class="score-number" id="score-number">0</div>
+          <div class="score-label">/ 100</div>
+        </div>
+      </div>
+      <div class="score-meta">
+        <div class="score-grade" id="score-grade">—</div>
+        <div class="modal-candidate" id="modal-candidate-name">Candidate</div>
+        <div class="modal-role"     id="modal-candidate-role">Role</div>
+      </div>
+    </div>
+
+    <div class="modal-divider"></div>
+
+    <div class="modal-summary" id="modal-summary"></div>
+
+    <div class="feedback-grid">
+      <div class="feedback-card">
+        <div class="fc-header"><span class="fc-dot dot-green"></span><span class="fc-label">Strengths</span></div>
+        <ul id="feedback-strengths"></ul>
+      </div>
+      <div class="feedback-card">
+        <div class="fc-header"><span class="fc-dot dot-amber"></span><span class="fc-label">Areas to Improve</span></div>
+        <ul id="feedback-gaps"></ul>
+      </div>
+    </div>
+
+    <div class="feedback-card" style="margin:0 24px 4px;border:1px solid var(--border);border-radius:var(--radius-md);padding:18px 20px;">
+      <div class="fc-header"><span class="fc-dot dot-blue"></span><span class="fc-label">Recommended Next Steps</span></div>
+      <ul id="feedback-next"></ul>
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn-ghost" id="btn-close-modal">Close</button>
+      <button class="btn-amber" id="btn-new-interview">New Interview</button>
+    </div>
+  </div>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>

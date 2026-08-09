@@ -1,0 +1,57 @@
+{
+  "session_id": "sess-jpnesnty-1786199605436",
+  "candidate_id": "CAND-005",
+  "candidate_name": "Michael Brown",
+  "job_role": "DevOps Engineer",
+  "completed_at": "2026-08-08T14:34:00.177170+00:00",
+  "score": 0,
+  "feedback": {
+    "summary": "Interview completed. Detailed feedback could not be parsed.",
+    "strengths": [],
+    "gaps": [],
+    "next": [],
+    "score": 0
+  },
+  "transcript": [
+    {
+      "role": "assistant",
+      "content": "Michael, it's a pleasure to meet you. I've had a chance to review your cohort profile, and I must say, I'm impressed with the progress you've made in the program. Your commitment to completing the missions is evident, and I'm excited to dive deeper into your understanding of the concepts.\n\nLet's start with your work on Day 7, Embeddings Explained. I noticed you explored how text is converted into vector embeddings using tools like Sentence Transformers and OpenAI Embeddings. Can you walk me through your thought process when deciding which embedding model to use for a specific task, such as semantic retrieval in a chatbot application? What factors do you consider when choosing between different embedding models, and how do you evaluate their performance?"
+    },
+    {
+      "role": "user",
+      "content": "sorry"
+    },
+    {
+      "role": "assistant",
+      "content": "No need to apologize, Michael. It's completely fine. Let's try to get started again.\n\nAs I was saying, I'd like to explore your work on Day 7, Embeddings Explained. You had a chance to work with Sentence Transformers and OpenAI Embeddings, which are both powerful tools for generating vector embeddings.\n\nCan you tell me a bit about how you approached the task of visualizing embedding clusters using PCA (Principal Component Analysis)? What insights did you gain from this exercise, and how do you think it helped you understand the relationships between similar healthcare concepts in your dataset?"
+    },
+    {
+      "role": "user",
+      "content": "sorry"
+    },
+    {
+      "role": "assistant",
+      "content": "No worries, Michael. Let's take a deep breath and start fresh.\n\nI'd like to ask you a question about your work on Day 10, Retrieval & Matching Engine. You built a query router that decides between SQL, vector search, or hybrid retrieval. Can you explain how you designed this query router, and what factors you considered when deciding which retrieval method to use for a given query?\n\nFor example, how did you determine when to use structured data lookup for plans and claims versus semantic retrieval from the vector database? What were some of the challenges you faced in implementing this query router, and how did you overcome them?"
+    },
+    {
+      "role": "user",
+      "content": "sorry"
+    },
+    {
+      "role": "assistant",
+      "content": "No need to apologize, Michael. It seems like you might be a bit nervous, and that's completely understandable. Let's try to relax and have a conversation.\n\nI'd like to switch gears a bit and talk about your work on Day 12, Prompt Engineering Fundamentals. I noticed that you had to try a few times to get it just right, but you ultimately completed it. Can you tell me a bit about what you learned from this experience?\n\nSpecifically, how do you think about the differences between zero-shot, few-shot, and chain-of-thought prompting? When would you use each of these approaches, and what are some of the benefits and drawbacks of each?"
+    },
+    {
+      "role": "user",
+      "content": "sorry"
+    },
+    {
+      "role": "assistant",
+      "content": "Michael, it's okay. I can see that you're struggling to get started. Let's take a break from the technical questions for a moment.\n\nCan you tell me a bit about what you're feeling right now? Is there something specific that's making you uncomfortable or unsure about how to respond?\n\nSometimes, taking a step back and acknowledging our feelings can help us relax and focus. I'm here to listen and support you, not to judge or criticize.\n\nRemember, this is a conversation, not an interrogation. We can take it at your pace and explore topics that you're interested in.\n\nWhen you're ready, we can try to dive back into some technical questions. Maybe we can start with something a bit more straightforward, like your experience with Docker and Kubernetes deployment on Day 28. How did you find working with those tools, and what did you learn from the experience?"
+    },
+    {
+      "role": "user",
+      "content": "sorry again"
+    }
+  ]
+}
